@@ -1,6 +1,7 @@
 package com.lanre.school_management.configuration;
 
 import com.lanre.school_management.repository.AppUserRepository;
+import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

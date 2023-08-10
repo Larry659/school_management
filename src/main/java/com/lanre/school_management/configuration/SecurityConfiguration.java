@@ -3,6 +3,7 @@ package com.lanre.school_management.configuration;
 
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -18,8 +19,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+
     private final AuthenticationProvider authenticationProvider;
-    private final Filter jwtAuthFilter;
+    private final JwtAuthenticationFilter jwtAuthFilter;
+
+
 
     @Bean
 
@@ -49,6 +53,7 @@ public class SecurityConfiguration {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin(auth -> auth.successForwardUrl(""))
                 .build();
 
 

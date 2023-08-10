@@ -6,10 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 @Data
@@ -23,10 +25,13 @@ public class AppUser implements UserDetails {
     private Integer id;
     private String lastName;
     private String firstName;
+    @Column(name = "email",unique = true)
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @LastModifiedDate
+    private LocalDateTime lastModified;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

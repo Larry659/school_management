@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -33,7 +35,7 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("The User with this email not found"));
-        var jwtToken = jwtService.generateToken((UserDetails) user);
+        var jwtToken = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -41,20 +43,26 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
-        var user = AppUser
-                .builder()
-                .email(request.getEmail())
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
 
-        var jwtToken = jwtService.generateToken((UserDetails) user);
+           var user = AppUser
+                   .builder()
+                   .email(request.getEmail())
+                   .firstName(request.getFirstName())
+                   .lastName(request.getLastName())
+                   .password(passwordEncoder.encode(request.getPassword()))
+                   .role(Role.USER)
+                   .build();
+           userRepository.save(user);
 
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+           var jwtToken = jwtService.generateToken(user);
+
+           return AuthenticationResponse.builder()
+                   .token(jwtToken)
+                   .build();
+
+
     }
+
+
+
 }
